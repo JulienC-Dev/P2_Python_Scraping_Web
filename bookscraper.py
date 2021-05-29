@@ -76,7 +76,7 @@ print(elemref[5].get_text())
 ###
 
 '''
-
+'''
 ## Récupération - Description du produit #
 prD = soup.find("div", attrs={"id":"product_description"}).find("h2")
 print(prD.text)
@@ -85,3 +85,30 @@ nt = soup.find("div", attrs={"id":"product_description"}).find_next_sibling()
 print(nt.get_text())
 
 ###
+'''
+'''
+### récupération - Catégorie #
+categorie = []
+cat = soup.find("ul",attrs={"class":"breadcrumb"}).findAll('a')
+for c in cat:
+    categorie.append(c)
+print("Categorie\n" + categorie[2].get_text())
+###
+'''
+'''
+### récupération - Notation #
+rat = soup.find("p", attrs={"class":"instock availability"}).find_next_sibling()
+rats = rat['class']
+if rats[1] == "One":
+    print("Review rating : \n" + "1/5")
+###
+'''
+
+
+## récupération - image url#
+image = soup.find('img')
+img = image['src']
+print("http://books.toscrape.com/"+ img.replace("../../", ""))
+
+##
+
