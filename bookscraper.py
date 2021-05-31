@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from bs4 import Comment
+import csv
 
 url = "http://books.toscrape.com/catalogue/in-a-dark-dark-wood_963/index.html"
 burl = "http://books.toscrape.com/catalogue/category/books/mystery_3/index.html"
@@ -18,7 +18,81 @@ title = soup.find('h1')
 print("Title : ")
 print(title.text)
 
+
+## Récupération - UPC / Price_including_tax / Price_excluding_tax #
+
+table = soup.findAll('tr')
+tds = []
+elemprod = []
+for i in table:
+    tds.append(i)
+    for x in tds:
+        elemprod = soup.findAll('th')
+        elemref = soup.findAll('td')
+
+UPC = elemprod[0].get_text()
+
+print(UPC)
+print(elemref[0].get_text())
+
+priceIncltax = elemprod[3].get_text()
+print(priceIncltax)
+print(elemref[3].get_text())
+
+priceExcltax = elemprod[2].get_text()
+print(priceExcltax)
+print(elemref[2].get_text())
+
+Available = elemprod[5].get_text()
+print(Available)
+print(elemref[5].get_text())
+
 ###
+
+## Récupération - Description du produit #
+prD = soup.find("div", attrs={"id":"product_description"}).find("h2")
+prDD = prD.text
+print(prDD)
+
+nt = soup.find("div", attrs={"id":"product_description"}).find_next_sibling()
+print(nt.get_text())
+
+###
+
+
+
+
+
+
+# Récupération - Product_page_url #
+
+p = []
+o = []
+n = soupbis.findAll('div',attrs={"class": "image_container"})
+for v in n:
+    b = v.find('a')
+    c = b['href']
+    p = c.replace("../../../", "")
+    o.append(p)
+
+print("Product_page_url :")
+
+urlp = ("http://books.toscrape.com/catalogue/" + o[1])
+print(urlp)
+
+####
+
+
+with open('data.csv', 'w') as file:
+
+    fieldnames = ['UPC','Titre :','priceIncltax','priceExcltax','Product_page_url :', 'Available','prDD']
+    fileD = csv.DictWriter(file,fieldnames=fieldnames)
+    fileD.writeheader()
+    fileD.writerow({'UPC': [elemref[0].get_text()],'Titre :': [title.text],'priceIncltax' : [elemref[3].get_text()], 'priceExcltax' : [elemref[2].get_text()],'Product_page_url :': [urlp],'Available' : [elemref[5].get_text()],
+                    'prDD':[nt.get_text()]})
+
+
+
 
 '''
 b =[]
@@ -34,58 +108,12 @@ for link in soupbis.find_all('a'):
 
 print(c)
 '''
-'''
-# Récupération - Product_page_url #
-p = []
-o = []
-n = soupbis.findAll('div',attrs={"class": "image_container"})
-for v in n:
-    b = v.find('a')
-    c = b['href']
-    p = c.replace("../../../", "")
-    o.append(p)
-
-print("Product_page_url :")
-print("http://books.toscrape.com/catalogue/" + o[1])
-###
-
-## Récupération - UPC / Price_including_tax / Price_excluding_tax #
-
-table = soup.findAll('tr')
-tds = []
-elemprod = []
-for i in table:
-    tds.append(i)
-    for x in tds:
-        elemprod = soup.findAll('th')
-        elemref = soup.findAll('td')
-
-
-print(elemprod[0].get_text())
-print(elemref[0].get_text())
-
-print(elemprod[3].get_text())
-print(elemref[3].get_text())
-
-print(elemprod[2].get_text())
-print(elemref[2].get_text())
-
-print(elemprod[5].get_text())
-print(elemref[5].get_text())
-
-###
 
 '''
 '''
-## Récupération - Description du produit #
-prD = soup.find("div", attrs={"id":"product_description"}).find("h2")
-print(prD.text)
 
-nt = soup.find("div", attrs={"id":"product_description"}).find_next_sibling()
-print(nt.get_text())
 
-###
-'''
+
 '''
 ### récupération - Catégorie #
 categorie = []
@@ -104,11 +132,11 @@ if rats[1] == "One":
 ###
 '''
 
-
+'''
 ## récupération - image url#
 image = soup.find('img')
 img = image['src']
 print("http://books.toscrape.com/"+ img.replace("../../", ""))
 
 ##
-
+'''
