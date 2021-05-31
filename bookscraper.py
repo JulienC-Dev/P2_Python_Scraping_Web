@@ -107,8 +107,8 @@ imgtitre = "image url"
 print(imgs)
 
 ##
-
-
+'''
+## création fichier CSV scraper sur une page livre
 with open('data.csv', 'w', encoding='utf-8') as file:
 
     fieldnames = ['Product_page_url :',UPC,'Titre :',priceIncltax,priceExcltax, Available,prDD, Cattitre, rattitre, imgtitre]
@@ -117,4 +117,14 @@ with open('data.csv', 'w', encoding='utf-8') as file:
     fileD.writerow({'Product_page_url :': [urlp],UPC: [elemref[0].get_text()],'Titre :': [title.text],priceIncltax : [elemref[3].get_text()], priceExcltax : [elemref[2].get_text()],Available : [elemref[5].get_text()],
                     prDD:[nt.get_text()], Cattitre: [cate], rattitre : [ratnote], imgtitre : imgs})
 
+####
+'''
+
+c =[]
+links = soupbis.findAll('div', attrs={"class":"image_container"})
+for link in links:
+    li = link.find('a')['href'].replace("../../../", "")
+    c.append("http://books.toscrape.com/catalogue/"+ li)
+
+print(c)
 
