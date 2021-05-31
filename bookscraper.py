@@ -11,7 +11,6 @@ resbis = requests.get(burl)
 soupbis = BeautifulSoup(resbis.text, 'lxml')
 soup = BeautifulSoup(res.text, 'lxml')
 
-links = []
 
 ## Récupération - Titre #
 title = soup.find('h1')
@@ -60,10 +59,6 @@ print(nt.get_text())
 ###
 
 
-
-
-
-
 # Récupération - Product_page_url #
 
 p = []
@@ -79,64 +74,47 @@ print("Product_page_url :")
 
 urlp = ("http://books.toscrape.com/catalogue/" + o[1])
 print(urlp)
-
 ####
 
 
-with open('data.csv', 'w') as file:
-
-    fieldnames = ['UPC','Titre :','priceIncltax','priceExcltax','Product_page_url :', 'Available','prDD']
-    fileD = csv.DictWriter(file,fieldnames=fieldnames)
-    fileD.writeheader()
-    fileD.writerow({'UPC': [elemref[0].get_text()],'Titre :': [title.text],'priceIncltax' : [elemref[3].get_text()], 'priceExcltax' : [elemref[2].get_text()],'Product_page_url :': [urlp],'Available' : [elemref[5].get_text()],
-                    'prDD':[nt.get_text()]})
-
-
-
-
-'''
-b =[]
-for link in soup.find_all('a'):
-    b.append(link)
-
-print(b)
-
-c =[]
-for link in soupbis.find_all('a'):
-   b = link.get('href')
-   c.append(b)
-
-print(c)
-'''
-
-'''
-'''
-
-
-
-'''
 ### récupération - Catégorie #
 categorie = []
 cat = soup.find("ul",attrs={"class":"breadcrumb"}).findAll('a')
 for c in cat:
     categorie.append(c)
-print("Categorie\n" + categorie[2].get_text())
+Cattitre = "Categorie"
+cate = categorie[2].get_text()
+print(cate)
 ###
-'''
-'''
+
 ### récupération - Notation #
 rat = soup.find("p", attrs={"class":"instock availability"}).find_next_sibling()
 rats = rat['class']
+rattitre = "Review rating :"
 if rats[1] == "One":
-    print("Review rating : \n" + "1/5")
-###
-'''
+    ratnote = "1/5"
+    print("Review rating : \n" + ratnote)
 
-'''
+
+###
+
+
 ## récupération - image url#
 image = soup.find('img')
 img = image['src']
-print("http://books.toscrape.com/"+ img.replace("../../", ""))
+imgs = "http://books.toscrape.com/"+ img.replace("../../", "")
+imgtitre = "image url"
+print(imgs)
 
 ##
-'''
+
+
+with open('data.csv', 'w', encoding='utf-8') as file:
+
+    fieldnames = ['Product_page_url :',UPC,'Titre :',priceIncltax,priceExcltax, Available,prDD, Cattitre, rattitre, imgtitre]
+    fileD = csv.DictWriter(file,fieldnames=fieldnames)
+    fileD.writeheader()
+    fileD.writerow({'Product_page_url :': [urlp],UPC: [elemref[0].get_text()],'Titre :': [title.text],priceIncltax : [elemref[3].get_text()], priceExcltax : [elemref[2].get_text()],Available : [elemref[5].get_text()],
+                    prDD:[nt.get_text()], Cattitre: [cate], rattitre : [ratnote], imgtitre : imgs})
+
+
