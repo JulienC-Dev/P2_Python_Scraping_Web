@@ -3,15 +3,13 @@ from bs4 import BeautifulSoup
 import csv
 
 url = "http://books.toscrape.com/catalogue/in-a-dark-dark-wood_963/index.html"
-burl = "http://books.toscrape.com/catalogue/category/books/mystery_3/index.html"
+
 
 res = requests.get(url)
-resbis = requests.get(burl)
 
-soupbis = BeautifulSoup(resbis.text, 'lxml')
 soup = BeautifulSoup(res.text, 'lxml')
 
-
+'''
 ## Récupération - Titre #
 title = soup.find('h1')
 print("Title : ")
@@ -118,24 +116,33 @@ with open('data.csv', 'w', encoding='utf-8') as file:
                     prDD:[nt.get_text()], Cattitre: [cate], rattitre : [ratnote], imgtitre : imgs})
 
 ####
-
-### lien des bouquins depuis une catégorie
-c =[]
-links = soupbis.findAll('div', attrs={"class":"image_container"})
-for link in links:
-    li = link.find('a')['href'].replace("../../../", "")
-    c.append("http://books.toscrape.com/catalogue/"+ li)
-
-print(c)
-###
-
-pgt =[]
-page = soupbis.find("ul",  attrs={"class":"pager"}).find('a')['href']
-if page:
-    pgt.append("http://books.toscrape.com/catalogue/category/books/mystery_3/"+page)
-    print(pgt)
+'''
 
 
+
+
+
+linkss = []
+for x in range(1,100):
+    burl = (f'http://books.toscrape.com/catalogue/category/books/mystery_3/page-{x}.html')
+    resbis = requests.get(burl)
+    soupbis = BeautifulSoup(resbis.text, 'lxml')
+    linkss.append(burl)
+    if soupbis.find("ul",  attrs={"class":"pager"}).find('li', attrs={"class":"next"}):
+        pass
+    else:
+        break
+    ### lien des bouquins depuis une catégorie
+    c = []
+    links = soupbis.findAll('div', attrs={"class": "image_container"})
+    for link in links:
+        li = link.find('a')['href'].replace("../../../", "")
+        c.append("http://books.toscrape.com/catalogue/" + li)
+
+    print(c)
+    ###
+
+print(linkss)
 
 '''
 ## lien des catégories
