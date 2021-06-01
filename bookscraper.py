@@ -130,7 +130,7 @@ for x in range(1,10):
         pass
     else:
         break
-
+#
 ## création fichier CSV scraper sur une page livre
 
 
