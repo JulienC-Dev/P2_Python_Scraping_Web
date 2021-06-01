@@ -107,7 +107,7 @@ imgtitre = "image url"
 print(imgs)
 
 ##
-'''
+
 ## création fichier CSV scraper sur une page livre
 with open('data.csv', 'w', encoding='utf-8') as file:
 
@@ -118,8 +118,8 @@ with open('data.csv', 'w', encoding='utf-8') as file:
                     prDD:[nt.get_text()], Cattitre: [cate], rattitre : [ratnote], imgtitre : imgs})
 
 ####
-'''
 
+### lien des bouquins depuis une catégorie
 c =[]
 links = soupbis.findAll('div', attrs={"class":"image_container"})
 for link in links:
@@ -127,4 +127,23 @@ for link in links:
     c.append("http://books.toscrape.com/catalogue/"+ li)
 
 print(c)
+###
 
+pgt =[]
+page = soupbis.find("ul",  attrs={"class":"pager"}).find('a')['href']
+if page:
+    pgt.append("http://books.toscrape.com/catalogue/category/books/mystery_3/"+page)
+    print(pgt)
+
+
+
+'''
+## lien des catégories
+pagelist =[]
+pagecat = soupbis.find("ul",  attrs={"nav nav-list"}).findAll('a')
+for ix in pagecat:
+    rt = ix['href'].replace("../", "")
+    pagelist.append("http://books.toscrape.com/catalogue/category/books/" + rt)
+
+print(pagelist[1 :len(pagelist)-1])
+'''
