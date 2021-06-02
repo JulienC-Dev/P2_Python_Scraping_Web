@@ -16,9 +16,7 @@ with open('data.csv', 'w', encoding='utf-8') as file:
 
         linkss.append(burl)
 
-
-
-        ### lien des bouquins depuis une catégorie
+        ### selection des blocs livres dans une catégorie
 
         links = soupbis.findAll('div', attrs={"class": "image_container"})
 
@@ -27,10 +25,17 @@ with open('data.csv', 'w', encoding='utf-8') as file:
             li = link.find('a')['href'].replace("../../../", "")
             c.append("http://books.toscrape.com/catalogue/" + li)
 
+            ## Scraping sur chaque livres
             for livre in c:
                 url = livre
                 res = requests.get(url)
                 soup = BeautifulSoup(res.text, 'lxml')
+
+                # Récupération - Product_page_url #
+                print("Product_page_url :")
+                b = ("http://books.toscrape.com/catalogue/" + li)
+                print(b)
+                ##
 
                 ## Récupération - Titre #
                 title = soup.find('h1')
@@ -38,7 +43,6 @@ with open('data.csv', 'w', encoding='utf-8') as file:
                 print(title.text)
 
                 ## Récupération - UPC / Price_including_tax / Price_excluding_tax #
-
                 table = soup.findAll('tr')
                 tds = []
                 elemprod = []
@@ -76,25 +80,6 @@ with open('data.csv', 'w', encoding='utf-8') as file:
                 print(nt.get_text())
 
                 ###
-
-
-                # Récupération - Product_page_url #
-
-                p = []
-                o = []
-                n = soupbis.findAll('div',attrs={"class": "image_container"})
-                for v in n:
-                    b = v.find('a')
-                    c = b['href']
-                    p = c.replace("../../../", "")
-                    o.append(p)
-
-                print("Product_page_url :")
-
-                urlp = ("http://books.toscrape.com/catalogue/" + o[1])
-                print(urlp)
-                ####
-
 
                 ### récupération - Catégorie #
                 categorie = []
@@ -135,23 +120,26 @@ with open('data.csv', 'w', encoding='utf-8') as file:
                 imgtitre = "image url"
                 print(imgs)
 
+                # récupération Data dans un fichier CSV
 
                 fieldnames = ['Product_page_url :', UPC, 'Titre :', priceIncltax, priceExcltax, Available, prDD,
                               Cattitre, rattitre, imgtitre]
                 fileD = csv.DictWriter(file, fieldnames=fieldnames)
                 fileD.writeheader()
-                fileD.writerow({'Product_page_url :': [urlp], UPC: [elemref[0].get_text()], 'Titre :': [title.text],
+                fileD.writerow({'Product_page_url :': [b], UPC: [elemref[0].get_text()], 'Titre :': [title.text],
                                 priceIncltax: [elemref[3].get_text()], priceExcltax: [elemref[2].get_text()],
                                 Available: [elemref[5].get_text()],
                                 prDD: [nt.get_text()], Cattitre: [cate], rattitre: [ratnote], imgtitre: imgs})
+                ##
 
+        ##contrôle d'une deuxième page sur une catégorie
         if soupbis.find("ul", attrs={"class": "pager"}).find('li', attrs={"class": "next"}):
             pass
         else:
             break
 
 '''
-## lien des catégories
+## lien des catégories 
 pagelist =[]
 pagecat = soupbis.find("ul",  attrs={"nav nav-list"}).findAll('a')
 for ix in pagecat:
