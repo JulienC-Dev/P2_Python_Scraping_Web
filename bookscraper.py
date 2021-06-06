@@ -6,10 +6,12 @@ import csv
 
 class Scrap:
     ## Scraping sur un livre
+
     def getbookinfo (self,url):
 
         res = requests.get(url)
         soup = BeautifulSoup(res.content, 'lxml')
+
 
         # Récupération - Product_page_url #
         print("Product_page_url :")
@@ -104,12 +106,6 @@ class Scrap:
                                     elemref[5].get_text(),
                                     nt.get_text(), cate, ratnote, imgs])
 
-    def __init__(self, b):
-        self.b = b
-
-
-
-    ###
 
 
     # scroll toutes les pages d'une categorie et recupere les liens de chaque livres
@@ -145,94 +141,36 @@ class Scrap:
                 pg = link.find('a')['href'].replace("../../../", "")
                 c.append("http://books.toscrape.com/catalogue/" + pg)
 
-        listcat =[]
+
+        listcat= []
         for a in c:
             listcat.append(self.getbookinfo(a))
 
-        return print(listcat)
 
-site = Scrap()
-site.Catliv("http://books.toscrape.com/catalogue/category/books/mystery_3/index.html")
+        return listcat
 
-'''
-print(re)
 
-tl = []
-tl.append(re)
-print(tl)
-'''
-'''
-    with open('datacatlivres.csv', 'w', encoding='utf-8') as w:
-        fieldnames = ['product_page_url', 'UPC', 'Titre :', 'priceIncltax', 'priceExcltax', 'Available', 'prDD',
-                      'Cattitre', 'rattitre', 'imgtitre']
 
-        catw = csv.DictWriter(w, fieldnames=fieldnames)
-        catw.writeheader()
-        catw.writerows({'Product_page_url :': [b], 'UPC': [elemref[0].get_text()], 'Titre :': [title.text],
-                                    'priceIncltax': [elemref[3].get_text()], 'priceExcltax': [elemref[2].get_text()],
-                                    'Available': [elemref[5].get_text()],
-                                    'prDD': [nt.get_text()], 'Cattitre': [cate], 'rattitre': [ratnote], 'imgtitre': imgs})
+cats = Scrap()
+burl = "http://books.toscrape.com/catalogue/category/books/nonfiction_13/index.html"
+bp = cats.Catliv(burl)
 
-    '''
+
 # récupération Data dans un fichier CSV
+with open('datacatlivres.csv', 'w', encoding='utf-8') as w:
+    fieldnames = ['product_page_url', 'UPC', 'Titre :', 'priceIncltax', 'priceExcltax', 'Available', 'prDD',
+                  'Cattitre', 'rattitre', 'imgtitre']
 
-'''
-with open('data.csv', 'r', encoding='utf-8') as f :
-    tl = []
-    fileD = csv.reader(f)
-    for row in fileD:
-        tl.append(re)
-
-    with open('datacatlivres.csv', 'w', encoding='utf-8') as w :
-        fieldnames = ['product_page_url', 'UPC', 'Titre :', 'priceIncltax', 'priceExcltax', 'Available', 'prDD',
-                      'Cattitre', 'rattitre', 'imgtitre']
-
-        catw = csv.DictWriter(w, fieldnames=fieldnames)
-        catw.writeheader()
-        for r in fieldnames:
-            catw.writerow({'product_page_url': , 'UPC': tl, 'Titre :': tl, 'priceIncltax': tl, 'priceExcltax':tl, 'Available':tl, 'prDD':tl,
-                          'Cattitre':tl, 'rattitre':tl, 'imgtitre':tl})
-'''
+    catw = csv.DictWriter(w, fieldnames=fieldnames)
+    catw.writeheader()
+    for i in bp:
+        catw.writerow({'product_page_url': i[0],'UPC': i[1],'Titre :': i[2],'priceIncltax': i[3],'priceExcltax': i[4],
+             'Available': i[5],'prDD': i[6],'Cattitre': i[7],'rattitre': i[8],'imgtitre': i[9]})
 
 
 
 
-'''
-'''
-'''
-                # récupération Data dans un fichier CSV
-
-                fieldnames = ['product_page_url', 'UPC', 'Titre :', 'priceIncltax', 'priceExcltax', 'Available', 'prDD',
-                              'Cattitre', 'rattitre', 'imgtitre']
-
-                
-                fileD = csv.DictWriter(file, fieldnames=fieldnames)
-                fileD.writeheader()
-                
-                
-                fileD = csv.writer(file,delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-                fileD.writerow(fieldnames)
-                fileD.writerow([b,elemref[0].get_text(), title.text, elemref[3].get_text(),
-                                 elemref[2].get_text(),
-                                elemref[5].get_text(),
-                                nt.get_text(), cate, ratnote, imgs])
-                ##
-                
-                
-                
-                fileD.writerow({'Product_page_url :': [b], UPC: [elemref[0].get_text()], 'Titre :': [title.text],
-                                priceIncltax: [elemref[3].get_text()], priceExcltax: [elemref[2].get_text()],
-                                Available: [elemref[5].get_text()],
-                                prDD: [nt.get_text()], Cattitre: [cate], rattitre: [ratnote], imgtitre: imgs})
-                
-        ##contrôle d'une deuxième page sur une catégorie
-        if soupbis.find("ul", attrs={"class": "pager"}).find('li', attrs={"class": "next"}):
-            pass
-        else:
-            break   
-   '''
-'''
-'''
+   
 '''
 ## lien des catégories 
 pagelist =[]
@@ -244,17 +182,4 @@ for ix in pagecat:
 print(pagelist[1 :len(pagelist)-1])
 
 
-'''
-'''
-marche mais passable
-tl = []
-tl.append(re)
-print(tl)
-
-with open('datacatlivres.csv', 'w', encoding='utf-8') as w:
-        catw = csv.writer(w,delimiter=',', quotechar=' ', dialect='excel')
-        catw.writerow(['product_page_url', 'UPC', 'Titre :', 'priceIncltax', 'priceExcltax', 'Available', 'prDD',
-                       'Cattitre', 'rattitre', 'imgtitre'])
-
-        catw.writerow(tl)
 '''
