@@ -3,65 +3,45 @@ from bs4 import BeautifulSoup
 import csv
 import bookscraper
 
-# affiche les liens de chaque catégories
-def allcat(urls):
 
-        r = requests.get(urls)
-        soupi = BeautifulSoup(r.content,'lxml')
+def getCategories(url):
+    r = requests.get(url)
+    soupi = BeautifulSoup(r.content, 'lxml')
 
-        ## lien des catégories
-        pagelist =[]
+    ## lien des catégories
+    pagelist = []
 
-        pagecat = soupi.find("ul",  attrs={"nav nav-list"}).findAll('a')
-        for ix in pagecat:
-            rt = ix['href'].replace("../", "")
+    livre = soupi.find("ul", attrs={"nav nav-list"}).find("li").find('ul').findAll('li')
+    for ix in livre:
+        a = ix.find('a')
+        path = a['href'].replace("../", "")
+        url = "http://books.toscrape.com/" + path
+        title = a.get_text(strip=True)
 
-            pagelist.append("http://books.toscrape.com/" + rt)
-        return (pagelist[1 :len(pagelist)-1])
+        pagelist.append((url, title))
 
-#affiche les noms de chaque catégories
-def affichecatte(urls):
-    rr = requests.get(urls)
-    soupii = BeautifulSoup(rr.content, 'lxml')
-
-    ppp = []
-    seeka = soupii.find("ul", attrs={"nav nav-list"}).find('li').find('ul').findAll('a')
-    for i in seeka:
-        ppp.append(i.get_text(strip=True))
-    return ppp
+    return pagelist
 
 
-b = bookscraper.Scrap()
-'''
-burl = "http://books.toscrape.com/catalogue/category/books/nonfiction_13/index.html"
-
-bp = b.Catliv(burl)
-'''
-
-urls= ("http://books.toscrape.com/index.html")
+if __name__ == '__main__':
+    b = bookscraper.Scrap()
 
 
-print(affichecatte(urls))
-
-print(allcat(urls))
+    urls= ("http://books.toscrape.com/index.html")
 
 
+    for cat in getCategories(urls):
 
-for i in affichecatte(urls):
-    print(i)
-    with open(f'cat{i}.csv', 'w',encoding='utf-8') as p:
-        fieldnames = ['product_page_url', 'UPC', 'Titre :', 'priceIncltax', 'priceExcltax', 'Available', 'prDD',
-                      'Cattitre', 'rattitre', 'imgtitre']
-        ca = csv.DictWriter(p, fieldnames=fieldnames)
-        ca.writeheader()
-        for x in allcat(urls):
+        with open(f'cat{cat[1]}.csv', 'w',encoding='utf-8') as p :
+            fieldnames = ['product_page_url', 'universal_ product_code (upc)', 'title', 'price_including_tax', 'price_excluding_tax', 'number_available', 'product_description',
+                          'category', 'review_rating', 'image_url']
+            ca = csv.DictWriter(p, fieldnames=fieldnames)
+            ca.writeheader()
+            for y in b.Catliv(cat[0]):
 
-            print(x)
-            burl = x
+                ca.writerow({'product_page_url': y[0], 'universal_ product_code (upc)': y[1], 'title': y[2],
+                                 'price_including_tax': y[3], 'price_excluding_tax': y[4],
+                                 'number_available': y[5], 'product_description': y[6], 'category': y[7],
+                                 'review_rating': y[8], 'image_url': y[9]})
 
-            for y in b.Catliv(burl):
-                print(y)
-                if
-                ca.writerow({'product_page_url': y[0], 'UPC': y[1], 'Titre :': y[2], 'priceIncltax': y[3], 'priceExcltax': y[4],
-                         'Available': y[5], 'prDD': y[6], 'Cattitre': y[7], 'rattitre': y[8], 'imgtitre': y[9]})
 

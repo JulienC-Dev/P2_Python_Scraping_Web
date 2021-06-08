@@ -54,14 +54,18 @@ class Scrap:
         ###
 
         ## Récupération - Description du produit #
-        prD = soup.find("div", attrs={"id":"product_description"}).find("h2")
-        prDD = prD.text
-        print(prDD)
 
-        nt = soup.find("div", attrs={"id":"product_description"}).find_next_sibling()
-        print(nt.get_text())
 
-        ###
+
+        if soup.find("div", attrs={"id": "product_description"}) is None:
+            nt = "Pas de description du livre"
+            print(nt)
+        else:
+            nt = soup.find("div", attrs={"id": "product_description"}).find_next_sibling()
+            nt = nt.get_text()
+            print(nt)
+
+
 
         ### récupération - Catégorie #
         categorie = []
@@ -103,8 +107,7 @@ class Scrap:
 
         return ([b,elemref[0].get_text(), title.text, elemref[3].get_text(),
                                      elemref[2].get_text(),
-                                    elemref[5].get_text(),
-                                    nt.get_text(), cate, ratnote, imgs])
+                                    elemref[5].get_text(),nt, cate, ratnote, imgs])
 
 
 
@@ -155,34 +158,23 @@ class Scrap:
 if __name__ == '__main__':
 
     cats = Scrap()
-    burl = "http://books.toscrape.com/catalogue/category/books/nonfiction_13/index.html"
+
+    cats.getbookinfo("http://books.toscrape.com/catalogue/alice-in-wonderland-alices-adventures-in-wonderland-1_5/index.html")
+
+    burl = "http://books.toscrape.com/catalogue/category/books/classics_6/index.html"
     bp = cats.Catliv(burl)
 
     # récupération Data d'une catégorie dans un fichier CSV
     with open('datacatlivres.csv', 'w', encoding='utf-8') as w:
-        fieldnames = ['product_page_url', 'UPC', 'Titre :', 'priceIncltax', 'priceExcltax', 'Available', 'prDD',
-                      'Cattitre', 'rattitre', 'imgtitre']
+        fieldnames = ['product_page_url', 'universal_ product_code (upc)', 'title', 'price_including_tax',
+                      'price_excluding_tax', 'number_available', 'product_description',
+                      'category', 'review_rating', 'image_url']
 
         catw = csv.DictWriter(w, fieldnames=fieldnames)
         catw.writeheader()
         for i in bp:
-            catw.writerow({'product_page_url': i[0],'UPC': i[1],'Titre :': i[2],'priceIncltax': i[3],'priceExcltax': i[4],
-                 'Available': i[5],'prDD': i[6],'Cattitre': i[7],'rattitre': i[8],'imgtitre': i[9]})
+            catw.writerow({'product_page_url': i[0],'universal_ product_code (upc)': i[1],'title': i[2],'price_including_tax': i[3],'price_excluding_tax': i[4],
+                 'number_available': i[5],'product_description': i[6],'category': i[7],'review_rating': i[8],'image_url': i[9]})
 
 
 
-
-'''
-'''
-'''
-## lien des catégories 
-pagelist =[]
-pagecat = soupbis.find("ul",  attrs={"nav nav-list"}).findAll('a')
-for ix in pagecat:
-    rt = ix['href'].replace("../", "")
-    pagelist.append("http://books.toscrape.com/catalogue/category/books/" + rt)
-
-print(pagelist[1 :len(pagelist)-1])
-
-
-'''
