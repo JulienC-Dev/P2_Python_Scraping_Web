@@ -151,26 +151,29 @@ class Scrap:
 
 
 
-cats = Scrap()
-burl = "http://books.toscrape.com/catalogue/category/books/nonfiction_13/index.html"
-bp = cats.Catliv(burl)
+
+if __name__ == '__main__':
+
+    cats = Scrap()
+    burl = "http://books.toscrape.com/catalogue/category/books/nonfiction_13/index.html"
+    bp = cats.Catliv(burl)
+
+    # récupération Data d'une catégorie dans un fichier CSV
+    with open('datacatlivres.csv', 'w', encoding='utf-8') as w:
+        fieldnames = ['product_page_url', 'UPC', 'Titre :', 'priceIncltax', 'priceExcltax', 'Available', 'prDD',
+                      'Cattitre', 'rattitre', 'imgtitre']
+
+        catw = csv.DictWriter(w, fieldnames=fieldnames)
+        catw.writeheader()
+        for i in bp:
+            catw.writerow({'product_page_url': i[0],'UPC': i[1],'Titre :': i[2],'priceIncltax': i[3],'priceExcltax': i[4],
+                 'Available': i[5],'prDD': i[6],'Cattitre': i[7],'rattitre': i[8],'imgtitre': i[9]})
 
 
-# récupération Data dans un fichier CSV
-with open('datacatlivres.csv', 'w', encoding='utf-8') as w:
-    fieldnames = ['product_page_url', 'UPC', 'Titre :', 'priceIncltax', 'priceExcltax', 'Available', 'prDD',
-                  'Cattitre', 'rattitre', 'imgtitre']
-
-    catw = csv.DictWriter(w, fieldnames=fieldnames)
-    catw.writeheader()
-    for i in bp:
-        catw.writerow({'product_page_url': i[0],'UPC': i[1],'Titre :': i[2],'priceIncltax': i[3],'priceExcltax': i[4],
-             'Available': i[5],'prDD': i[6],'Cattitre': i[7],'rattitre': i[8],'imgtitre': i[9]})
 
 
-
-
-   
+'''
+'''
 '''
 ## lien des catégories 
 pagelist =[]
