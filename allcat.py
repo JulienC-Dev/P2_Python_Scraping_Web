@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import csv
 import bookscraper
 import os
+import re
 
 # Récupère les urls des catégories et les titres des catégories
 def getCategories(url):
@@ -33,59 +34,61 @@ if __name__ == '__main__':
     ##########################
 
     # Solution sans traitement des dossiers images et fichiers CSV
-    for cat in getCategories(urls):
-
-        with open(f'cat{cat[1]}.csv', 'w',encoding='utf-8') as p :
-            fieldnames = ['product_page_url', 'universal_ product_code (upc)', 'title', 'price_including_tax', 'price_excluding_tax', 'number_available', 'product_description',
-                          'category', 'review_rating', 'image_url']
-            ca = csv.DictWriter(p, fieldnames=fieldnames)
-            ca.writeheader()
-            for y in b.Catliv(cat[0]):
-
-                ca.writerow({'product_page_url': y[0], 'universal_ product_code (upc)': y[1], 'title': y[2],
-                                 'price_including_tax': y[3], 'price_excluding_tax': y[4],
-                                 'number_available': y[5], 'product_description': y[6], 'category': y[7],
-                                 'review_rating': y[8], 'image_url': y[9]})
-
-                Picture_request = requests.get(y[9])
-                with open(y[2], 'wb') as f:
-                    f.write(Picture_request.content)
-
-
-###############
-    #solution avec traitement des dossier images et fichier csv
     # for cat in getCategories(urls):
     #
-    #     try:
-    #         os.mkdir(cat[1])
-    #
-    #     except:
-    #         print("Dossier " + cat[1] + " créé")
-    #
-    #
-    #     folder = f'/{cat[1]}'
-    #     currentD = os.path.dirname(os.path.realpath(__file__))
-    #     p = currentD+folder
-    #
-    #     with open(os.path.join(p, f'cat{cat[1]}.csv'), 'w', encoding='utf-8') as p:
-    #
-    #         fieldnames = ['product_page_url', 'universal_ product_code (upc)', 'title', 'price_including_tax',
-    #                       'price_excluding_tax', 'number_available', 'product_description',
-    #                           'category', 'review_rating', 'image_url']
+    #     with open(f'cat{cat[1]}.csv', 'w',encoding='utf-8') as p :
+    #         fieldnames = ['product_page_url', 'universal_ product_code (upc)', 'title', 'price_including_tax', 'price_excluding_tax', 'number_available', 'product_description',
+    #                       'category', 'review_rating', 'image_url']
     #         ca = csv.DictWriter(p, fieldnames=fieldnames)
     #         ca.writeheader()
     #         for y in b.Catliv(cat[0]):
+    #
     #             ca.writerow({'product_page_url': y[0], 'universal_ product_code (upc)': y[1], 'title': y[2],
     #                              'price_including_tax': y[3], 'price_excluding_tax': y[4],
     #                              'number_available': y[5], 'product_description': y[6], 'category': y[7],
     #                              'review_rating': y[8], 'image_url': y[9]})
+    #
     #             Picture_request = requests.get(y[9])
-    #
-    #             dossier = f'/{cat[1]}'
-    #             currentD = os.path.dirname(os.path.realpath(__file__))
-    #             pp = currentD + dossier
-    #
-    #             with open(os.path.join(pp,y[2]), 'wb') as f:
+    #             modiftitre = re.sub(r'[^\w\s]','',y[2])
+    #             with open(modiftitre, 'wb') as f:
     #                 f.write(Picture_request.content)
+
+
+###############
+    #solution avec traitement des dossier images et fichier csv
+    for cat in getCategories(urls):
+
+        try:
+            os.mkdir(cat[1])
+
+        except:
+            print("Dossier " + cat[1] + " créé")
+
+
+        folder = f'/{cat[1]}'
+        currentD = os.path.dirname(os.path.realpath(__file__))
+        p = currentD+folder
+
+        with open(os.path.join(p, f'cat{cat[1]}.csv'), 'w', encoding='utf-8') as p:
+
+            fieldnames = ['product_page_url', 'universal_ product_code (upc)', 'title', 'price_including_tax',
+                          'price_excluding_tax', 'number_available', 'product_description',
+                              'category', 'review_rating', 'image_url']
+            ca = csv.DictWriter(p, fieldnames=fieldnames)
+            ca.writeheader()
+            for y in b.Catliv(cat[0]):
+                ca.writerow({'product_page_url': y[0], 'universal_ product_code (upc)': y[1], 'title': y[2],
+                                 'price_including_tax': y[3], 'price_excluding_tax': y[4],
+                                 'number_available': y[5], 'product_description': y[6], 'category': y[7],
+                                 'review_rating': y[8], 'image_url': y[9]})
+                Picture_request = requests.get(y[9])
+                modiftittre = re.sub(r'[^\w\s]','',y[2])
+
+                dossier = f'/{cat[1]}'
+                currentD = os.path.dirname(os.path.realpath(__file__))
+                pp = currentD + dossier
+
+                with open(os.path.join(pp,modiftittre), 'wb') as f:
+                    f.write(Picture_request.content)
 
 

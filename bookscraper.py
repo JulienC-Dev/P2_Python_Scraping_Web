@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 import csv
 
 
-
 class Scrap:
     ## Scraping sur un livre
 
@@ -22,6 +21,7 @@ class Scrap:
         ## Récupération - Titre #
         title = soup.find('h1')
         print("Title : ")
+
         print(title.text)
 
         ## Récupération - UPC / Price_including_tax / Price_excluding_tax #
@@ -159,9 +159,9 @@ if __name__ == '__main__':
 
     cats = Scrap()
 
-    cats.getbookinfo("http://books.toscrape.com/catalogue/alice-in-wonderland-alices-adventures-in-wonderland-1_5/index.html")
+    cats.getbookinfo("http://books.toscrape.com/catalogue/red-hoodarsenal-vol-1-open-for-business-red-hoodarsenal-1_729/index.html")
 
-    burl = "http://books.toscrape.com/catalogue/category/books/classics_6/index.html"
+    burl = "http://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"
     bp = cats.Catliv(burl)
 
     # récupération Data d'une catégorie dans un fichier CSV
