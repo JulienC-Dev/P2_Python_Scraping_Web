@@ -1,7 +1,7 @@
 Bienvenue 
 
 1 - Cloner le projet P2_bookscraper depuis Github vers votre répertoire 
-lien :  https://github.com/JulienC-Dev/P2_bookscraper/blob/dev/allcat.py
+lien :  https://github.com/JulienC-Dev/P2_bookscraper
 
 2 - Créer un environnement virtuel dans votre répertoire
 
