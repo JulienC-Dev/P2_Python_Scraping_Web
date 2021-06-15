@@ -82,8 +82,7 @@ if __name__ == '__main__':
                                  'number_available': y[5], 'product_description': y[6], 'category': y[7],
                                  'review_rating': y[8], 'image_url': y[9]})
                 Picture_request = requests.get(y[9])
-                modiftittre = re.sub(r'[^\w\s]','',y[2])
-
+                modiftittre = y[1] +'.jpg'
                 dossier = f'/{cat[1]}'
                 currentD = os.path.dirname(os.path.realpath(__file__))
                 pp = currentD + dossier
